@@ -1,0 +1,111 @@
+// Dados comuns às três conversas de exemplo da Sanborr: base de conhecimento, anexos,
+// módulos da plataforma e a lista de conversas. Tudo sintético; nomes de clientes são inventados.
+(function () {
+  const A = window.Assets;
+  const esc = A.esc;
+
+  const KB = {
+    // Da empresa
+    svc: { kind: "privado", t: "Catálogo de serviços", item: "Revestimento, recuperação e fabricação de peças de borracha", where: "Base de conhecimento da Cosmika", st: "real", owner: "Comercial", updated: "10/11/2026", access: "Leitura", desc: "O que a empresa faz e não faz, com as perguntas que cada serviço exige antes do orçamento.", use: "Responde se o serviço existe e pergunta o que falta. Nunca promete preço ou prazo.", sample: { title: "Trecho", text: "Revestimento de cilindros: pedir foto, desenho se houver, material e dureza desejados, quantidade e prazo. Medidas finais saem da inspeção." } },
+    mat: { kind: "privado", t: "Tabela de compostos e durezas", item: "Composto, dureza, R$/kg e densidade, com vigência", where: "Propostas técnicas · Tabelas", st: "build", owner: "Gestão", updated: "01/11/2026 · vigente", access: "Leitura", desc: "Os compostos que a empresa usa, com a faixa de dureza, a tolerância padrão, o preço por kg e a densidade usada para calcular o peso.", use: "Calcula o peso e o custo do material no orçamento. Só usa a versão vigente.", sample: { title: "Valores de exemplo", cols: ["Composto", "Dureza", "R$/kg", "Densidade"], rows: [["NBR 70", "70 ±5 Shore A", "38,40", "1,25"], ["EPDM 60", "60 ±5 Shore A", "41,90", "1,20"], ["Silicone 50", "50 ±5 Shore A", "96,00", "1,15"]] } },
+    tempos: { kind: "privado", t: "Tabela de tempos", item: "Minutos por faixa de diâmetro e comprimento, e o valor da hora", where: "Propostas técnicas · Tabelas", st: "build", owner: "Gestão", updated: "Versão 2026 · vigente", access: "Leitura", desc: "Quanto tempo de mão de obra cada faixa de peça leva, do revestimento à retífica, com a inspeção incluída.", use: "Acha a faixa da peça e calcula a mão de obra prevista. Fora de faixa, deixa o campo pendente.", sample: { title: "Faixas de exemplo", cols: ["Ø (mm)", "Comprimento (mm)", "Minutos"], rows: [["100–150", "300–400", "120"], ["150–200", "400–500", "165"], ["200–250", "500–700", "230"]] } },
+    aplic: { kind: "privado", t: "Aplicações e durezas usuais", item: "Que dureza costuma servir para cada uso da peça", where: "Base de conhecimento da Cosmika", st: "real", owner: "Responsável técnico", updated: "05/11/2026", access: "Leitura", desc: "Regras da casa para sugerir dureza e material quando o cliente não sabe. Sempre como sugestão, a confirmar.", use: "Sugere a faixa de dureza e o composto, marcando como sugestão.", sample: { title: "Regras de exemplo", cols: ["Uso", "Dureza sugerida", "Composto"], rows: [["Laminação", "60–70 Shore A", "NBR ou EPDM"], ["Puxador", "70–80 Shore A", "NBR"], ["Contato com água quente", "60–70 Shore A", "EPDM"]] } },
+    hist: { kind: "privado", t: "Histórico de peças", item: "Cada peça física com seu código, desenho, serviços e medidas", where: "Propostas técnicas, pela ferramenta do agente", st: "build", owner: "Automático", updated: "Contínuo", access: "Consulta por desenho, código ou cliente", desc: "Liga a peça ao desenho, às inspeções e às propostas. O histórico só é ligado a um novo pedido depois que uma pessoa confere a identidade.", use: "Procura desenho igual ou parecido e mostra o que foi feito antes.", sample: { title: "Registros de exemplo", cols: ["Código", "Desenho", "Último serviço"], rows: [["EX-0291", "Cilindro Ø 180 × 450", "Revestimento, 03/2026"], ["EX-0292", "Cilindro Ø 180 × 450", "Revestimento, 03/2026"], ["EX-0180", "Rolo RX-2000, pos. 14", "Revestimento, 08/2025"]] } },
+    fichas: { kind: "privado", t: "Fichas de inspeção", item: "Ficha numerada por ano, mês e sequência, com fotos", where: "Propostas técnicas · Inspeções", st: "build", owner: "Administrativo", updated: "Contínuo", access: "Leitura", desc: "O que a inspeção encontrou em cada peça: nota de remessa, embalagem, medidas, dureza, avarias, desmontagem, tempo e fotos.", use: "Leva as medidas da inspeção para o orçamento, sem redigitar." },
+    propostas: { kind: "privado", t: "Propostas e revisões", item: "Toda revisão congelada, com o PDF e o que mudou", where: "Propostas técnicas", st: "build", owner: "Comercial", updated: "Contínuo", access: "Leitura", desc: "Histórico de propostas por cliente e por peça, com preço, prazo e condições de cada revisão.", use: "Mostra o que foi cotado antes para a mesma peça. Não copia preço sozinho." },
+    rota: { kind: "privado", t: "Rotas de entrega", item: "Rota fixa por região e dia; segunda e sexta para urgências", where: "Base de conhecimento da Cosmika", st: "real", owner: "Logística", updated: "18/11/2026", access: "Leitura", desc: "Que dia da semana a frota passa em cada região. Fora do estado, a transportadora é do cliente.", use: "Diz ao cliente o dia da entrega, nunca o horário.", sample: { title: "Rotas de exemplo", cols: ["Dia", "Região"], rows: [["Terça", "Região A"], ["Quarta", "Região B"], ["Quinta", "Região C"], ["Segunda e sexta", "Urgências"]] } },
+    guia: { kind: "privado", t: "Guia de uso e armazenamento", item: "Vai junto com a peça na entrega", where: "Base de conhecimento da Cosmika", st: "real", owner: "Responsável técnico", updated: "01/10/2026", access: "Leitura e envio", desc: "Boas práticas de uso, armazenamento e limpeza das peças revestidas.", use: "Anexa o guia no aviso de entrega e responde dúvidas de cuidado." },
+    // Públicas
+    shore: { kind: "publico", t: "Normas de dureza Shore", item: "Método de medição com durômetro (ISO 48-4, ASTM D2240)", where: "Normas técnicas publicadas", st: "real", access: "Referência", desc: "Como a dureza é medida e por que ela sempre vem com a escala. Serve para explicar ao cliente o que está sendo pedido.", use: "Explica a escala e a tolerância. Não decide a dureza da peça." },
+    tol: { kind: "publico", t: "Tolerâncias gerais", item: "Classes de tolerância para medidas sem indicação (ISO 2768)", where: "Normas técnicas publicadas", st: "real", access: "Referência", desc: "Quando o desenho não traz tolerância numa medida, a classe geral indica a faixa aceitável.", use: "Aponta medidas sem tolerância no desenho e pergunta qual classe vale." },
+    elast: { kind: "publico", t: "Propriedades dos elastômeros", item: "NBR, EPDM, silicone e poliuretano: onde cada um resiste", where: "Literatura técnica e fichas de fornecedores", st: "real", access: "Referência", desc: "Resistência a óleo, água quente, ozônio, temperatura e abrasão de cada família de borracha.", use: "Ajuda a sugerir material quando o cliente descreve o uso, sempre como sugestão." },
+    web: { kind: "publico", t: "Busca na web sob demanda", item: "Manuais, listas de peças e catálogos de fabricantes", where: "Páginas públicas consultadas pelo agente", st: "prop", access: "Busca e leitura, com endereço e data guardados", desc: "Quando o cliente passa uma referência (modelo da máquina, posição, código do fabricante), o agente procura documentos públicos e extrai as medidas.", use: "Monta a ficha com a fonte de cada campo. Fontes que discordam viram pergunta ao cliente." },
+    cnpj: { kind: "publico", t: "Cadastro público de empresas", item: "Razão social, endereço e atividade pelo CNPJ", where: "Dados abertos de CNPJ", st: "prop", access: "Consulta", desc: "Completa o cadastro de um cliente novo sem pedir tudo na conversa.", use: "Preenche o cadastro para a pessoa conferir." },
+    // Dados de sistema
+    cosm: { kind: "dados", t: "Conversas na Cosmika", item: "Todas as mensagens, fotos e anexos de cada contato", where: "Cosmika", st: "real", access: "Leitura e envio aprovado", desc: "O histórico de cada contato no WhatsApp, com os anexos.", use: "Cita o trecho de onde tirou cada necessidade." },
+    omni: { kind: "dados", t: "Omni (ERP, a confirmar)", item: "Cadastro de clientes, pedidos, notas e faturas", where: "Integração com o ERP", st: "prop", access: "Leitura; escrita do pedido quando houver interface", desc: "Hoje o ERP é consultado para cadastro e regime tributário antes da aprovação, e recebe o pedido digitado depois.", use: "Lê cadastro e situação de faturas; grava o pedido uma vez só." },
+    carga: { kind: "dados", t: "Carga Máquina (PCP)", item: "Ordens, roteiro e apontamentos por tablet", where: "Integração com o PCP", st: "prop", access: "Leitura; escrita da ordem quando houver interface", desc: "Onde a produção acompanha a peça e aponta os tempos.", use: "Recebe a ordem e devolve os apontamentos para o custo." },
+  };
+
+  // ---------- documentos ----------
+  const paper = ({ title, meta = [], intro = "", table, foot = [], extra = "" }) => `<div class="paper"><div class="ph-row"><span>Sanborr (demonstração)</span><span>Documento de exemplo</span></div><h3>${esc(title)}</h3>${meta.length ? `<div class="ph-row">${meta.map(esc).map((m) => `<span>${m}</span>`).join("")}</div>` : ""}${intro ? `<p>${esc(intro)}</p>` : ""}${table ? `<table><thead><tr>${table.cols.map((c, i) => `<th class="${table.num?.includes(i) ? "num" : ""}">${esc(c)}</th>`).join("")}</tr></thead><tbody>${table.rows.map((r) => `<tr>${r.map((c, i) => `<td class="${table.num?.includes(i) ? "num" : ""}">${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>` : ""}${extra}${foot.map((f) => `<p class="meta">${esc(f)}</p>`).join("")}</div>`;
+  const prop = (rev) => paper({
+    title: `Proposta PRO-0011 · revisão ${rev}`, meta: ["Cliente: Indústria de demonstração", rev === 0 ? "25/11/2026" : "25/11/2026, 16:30", "Validade: 10 dias"],
+    intro: "Revestimento de dois cilindros em borracha, conforme inspeção da ficha 2611.031.",
+    table: { cols: ["Item", "Qtd.", "Preço unit.", "Total"], num: [1, 2, 3], rows: [[`Revestimento NBR 70 ${rev === 0 ? "±5" : "±2"} Shore A, Ø 180 × 450 mm (EX-0417, EX-0418)`, "2", rev === 0 ? "R$ 690,00" : "R$ 720,00", rev === 0 ? "R$ 1.380,00" : "R$ 1.440,00"]] },
+    extra: rev === 1 ? `<div class="sample"><strong>O que mudou da revisão 0</strong><p>Tolerância de dureza ±5 → ±2 Shore A, a pedido do cliente. Controle de dureza mais longo: 2,75 h → 3,00 h por peça. Preço 690,00 → 720,00.</p></div>` : "",
+    foot: ["Prazo: 15 dias úteis após o pedido.", "Valores de exemplo, sem relação com preços reais."],
+  });
+  const dwgA = () => A.roll({ L: 450, D: 180, shaftD: 60, shaftL: 90, coreD: 150, title: "Desenho do cliente (exemplo)", code: "DC-7731", rev: "C", material: "NBR", hardness: "70 Shore A", notes: ["Revestir em borracha NBR 70 Shore A.", "Acabamento retificado.", "Medidas em mm."] });
+
+  const FILES = {
+    "foto-cilindro.jpg": { title: "Foto enviada pelo cliente", sub: "WhatsApp · 23/11 08:41", render: () => A.photo("cilindro"), note: "Imagem sintética que simula a foto do cliente. A trinca aparece; medida e dureza saem da inspeção." },
+    "desenho-cilindro.pdf": { title: "Desenho enviado pelo cliente", sub: "WhatsApp · 23/11 08:47 · 1 página", render: dwgA, note: "Desenho sintético gerado a partir das medidas do exemplo.", realGroup: "desenhos" },
+    "Proposta PRO-0011 rev. 0.pdf": { title: "Proposta, revisão 0", sub: "Gerada pelo Propostas técnicas", render: () => prop(0), realGroup: "proposta" },
+    "Proposta PRO-0011 rev. 1.pdf": { title: "Proposta, revisão 1", sub: "Gerada pelo Propostas técnicas", render: () => prop(1) },
+    "Pedido de compra 8812.pdf": { title: "Pedido de compra do cliente", sub: "WhatsApp · 26/11 09:15", render: () => paper({ title: "Pedido de compra 8812", meta: ["Emitido por: Indústria de demonstração", "26/11/2026"], table: { cols: ["Item", "Qtd.", "Preço unit.", "Entrega"], num: [1, 2], rows: [["Revestimento de cilindro, ref. proposta PRO-0011 rev. 1", "2", "R$ 720,00", "11/12/2026"]] }, foot: ["A entrega pedida (11/12) diverge da revisão (17/12). O app mostra isso antes de fechar."] }) },
+    "Guia de uso e armazenamento.pdf": { title: "Guia de uso e armazenamento", sub: "Base de conhecimento", render: () => paper({ title: "Guia de uso e armazenamento", intro: "Cuidados para a peça revestida durar mais.", table: { cols: ["Cuidado", "Como"], rows: [["Armazenar", "Na horizontal, apoiada pelo eixo, longe de sol e de motores elétricos"], ["Limpar", "Pano úmido e detergente neutro; sem solventes"], ["Montar", "Sem bater na borracha; conferir o alinhamento"], ["Inspecionar", "Trincas, desgaste irregular ou perda de dureza: avisar antes de piorar"]] }, foot: ["Texto de exemplo."] }) },
+    "foto-cilindro-pronto.jpg": { title: "Cilindro pronto", sub: "Foto da inspeção final", render: () => A.photo("pronto"), note: "Imagem sintética. A etiqueta leva o código da peça e a dureza medida." },
+    // conversa sem desenho
+    "foto-rolo-trena.jpg": { title: "Foto com trena", sub: "WhatsApp · enviada pelo cliente", render: () => A.photo("trena"), note: "Imagem sintética. A trena dá o comprimento aproximado da borracha; a inspeção confirma." },
+    "foto-ponta-eixo.jpg": { title: "Foto da ponta do eixo", sub: "WhatsApp · enviada pelo cliente", render: () => A.photo("ponta"), note: "Imagem sintética. O paquímetro mostra o diâmetro da ponta do eixo." },
+    "Desenho sugerido DS-0007 rev. A.pdf": { title: "Desenho sugerido, revisão A", sub: "Gerado pelo Propostas técnicas a partir das fotos", render: () => A.roll({ L: 1240, D: 150, shaftD: 40, shaftL: 120, coreD: 124, title: "Desenho sugerido · a confirmar", code: "DS-0007", rev: "A", material: "EPDM (sugerido)", hardness: "60–70 Shore A (sugerido)", stamp: "Sugestão: o cliente confirma", notes: ["Medidas tiradas das fotos, ±3 mm.", "Dureza e material: sugestão para laminação.", "Confirmar na inspeção da peça."] }) },
+    "Desenho sugerido DS-0007 rev. B.pdf": { title: "Desenho sugerido, revisão B", sub: "Corrigido com a resposta do cliente", render: () => A.roll({ L: 1250, D: 150, shaftD: 40, shaftL: 120, coreD: 124, title: "Desenho sugerido · confirmado pelo cliente", code: "DS-0007", rev: "B", material: "EPDM", hardness: "65 ±5 Shore A", highlight: ["L"], notes: ["Comprimento corrigido pelo cliente: 1.250 mm.", "Dureza medida na peça antiga: 66 Shore A.", "Medidas finais confirmadas na inspeção."] }) },
+    // conversa por referência
+    "plaqueta-maquina.jpg": { title: "Foto da plaqueta da máquina", sub: "WhatsApp · enviada pelo cliente", render: () => A.photo("plaqueta"), note: "Imagem sintética de um fabricante fictício." },
+    "Manual RX-2400, lista de peças.pdf": { title: "Manual da máquina, lista de peças (trecho)", sub: "Encontrado pelo agente na web · fonte pública fictícia", render: () => paper({ title: "Máquinas de Exemplo · RX-2400 · lista de peças", meta: ["manual-rx2400.example/pecas.pdf", "consultado em 02/12/2026"], table: { cols: ["Pos.", "Descrição", "Medidas (mm)", "Revestimento"], rows: [["13", "Rolo guia", "Ø 90 × 1.600", "Sem revestimento"], ["14", "Rolo puxador", "Ø 120 × 1.600, eixo Ø 45", "NBR 75 Shore A"], ["15", "Rolo de pressão", "Ø 140 × 1.600", "PU 90 Shore A"]] }, foot: ["Documento fictício criado para o exemplo."] }) },
+    "Desenho sugerido DS-0008 rev. A.pdf": { title: "Desenho montado pela referência", sub: "Gerado a partir do manual e das fotos", render: () => A.roll({ L: 1600, D: 120, shaftD: 45, shaftL: 140, coreD: 98, title: "Desenho por referência · a confirmar", code: "DS-0008", rev: "A", material: "NBR (manual)", hardness: "75 Shore A (manual)", stamp: "Fontes discordam no Ø", highlight: ["D"], notes: ["Ø 120 pelo manual; Ø 125 pelo distribuidor.", "Medir a peça antiga para decidir.", "Fontes guardadas com endereço e data."] }) },
+  };
+
+  const PLATFORM = {
+    name: "Atendimento e prospecção", org: "Sanborr (demonstração)",
+    modules: [
+      { id: "contatos", t: "Contatos e clientes", sub: "Quem fala com a empresa, com origem e situação", src: "Cosmika e cadastro do Omni", st: "build" },
+      { id: "servicos", t: "Serviços e pedidos", sub: "Cada serviço da conversa à entrega", src: "Propostas técnicas e Operação e custos", st: "build" },
+      { id: "financeiro", t: "Financeiro", sub: "Faturas e cobranças, lidas do ERP", src: "Leitura do Omni (proposta)", st: "prop" },
+      { id: "ajustes", t: "Ajustes", sub: "Papéis, integrações, tabelas, templates e agente", src: "Configuração da organização", st: "build" },
+    ],
+    contatos: [
+      { empresa: "Indústria de demonstração", segmento: "Bens de capital", contato: "Contato de demonstração", canal: "WhatsApp", origem: "Cliente da carteira", ultimo: "SIM-SERV-A · em produção", tipo: "Cliente" },
+      { empresa: "Embalagens de exemplo", segmento: "Embalagens", contato: "Manutenção (exemplo)", canal: "WhatsApp", origem: "Indicação", ultimo: "Desenho sugerido em validação", tipo: "Novo" },
+      { empresa: "Papel e cartão de exemplo", segmento: "Papel", contato: "Compras e manutenção (exemplo)", canal: "WhatsApp e e-mail", origem: "Site", ultimo: "Ficha por referência", tipo: "Novo" },
+      { empresa: "Têxtil modelo", segmento: "Têxtil", contato: "Manutenção (exemplo)", canal: "E-mail", origem: "Cliente da carteira", ultimo: "Recuperação de rolos · entregue", tipo: "Cliente" },
+      { empresa: "Gráfica de ensaio", segmento: "Gráfica", contato: "Produção (exemplo)", canal: "WhatsApp", origem: "Cliente da carteira", ultimo: "Revestimento · proposta enviada", tipo: "Cliente" },
+      { empresa: "Siderurgia fictícia", segmento: "Siderurgia", contato: "Manutenção (exemplo)", canal: "E-mail", origem: "Feira", ultimo: "Sem serviço", tipo: "Prospecção" },
+      { empresa: "Alimentos de exemplo", segmento: "Alimentos", contato: "Engenharia (exemplo)", canal: "WhatsApp", origem: "Lista de prospecção", ultimo: "Sem serviço", tipo: "Prospecção" },
+    ],
+    servicos: [
+      { cod: "SIM-SERV-A", servico: "Revestimento de 2 cilindros", cliente: "Indústria de demonstração", pecas: "EX-0417, EX-0418", etapa: "Em produção", grupo: "Produção", proposta: "PRO-0011 rev. 1", entrega: "17/12/2026" },
+      { cod: "SIM-SERV-B", servico: "Revestimento de 1 rolo", cliente: "Embalagens de exemplo", pecas: "A receber", etapa: "Desenho em validação", grupo: "Comercial", proposta: "—", entrega: "A combinar" },
+      { cod: "SIM-SERV-C", servico: "Rolo puxador por referência", cliente: "Papel e cartão de exemplo", pecas: "A receber", etapa: "Ficha em montagem", grupo: "Comercial", proposta: "—", entrega: "A combinar" },
+      { cod: "SIM-SERV-D", servico: "Revestimento de 4 rolos", cliente: "Gráfica de ensaio", pecas: "EX-0398 a EX-0401", etapa: "Aguardando aceite", grupo: "Comercial", proposta: "PRO-0009 rev. 0", entrega: "A combinar" },
+      { cod: "SIM-SERV-E", servico: "Recuperação de 2 rolos", cliente: "Têxtil modelo", pecas: "EX-0377, EX-0378", etapa: "Entregue", grupo: "Entregue", proposta: "PRO-0006 rev. 1", entrega: "12/11/2026" },
+      { cod: "SIM-SERV-F", servico: "Revestimento de 1 cilindro", cliente: "Indústria de demonstração", pecas: "EX-0362", etapa: "Retífica", grupo: "Produção", proposta: "PRO-0005 rev. 0", entrega: "04/12/2026" },
+    ],
+    faturas: [
+      { nota: "NF 5101", forma: "Boleto", cliente: "Têxtil modelo", servico: "SIM-SERV-E", valor: 1980, venc: "12/12/2026", status: "A vencer" },
+      { nota: "NF 5094", forma: "Pix", cliente: "Indústria de demonstração", servico: "Serviço de outubro", valor: 2650, venc: "05/11/2026", status: "Paga" },
+      { nota: "NF 5088", forma: "Boleto", cliente: "Gráfica de ensaio", servico: "Serviço de outubro", valor: 1240, venc: "30/10/2026", status: "Vencida" },
+      { nota: "NF 5085", forma: "Boleto", cliente: "Têxtil modelo", servico: "Serviço de outubro", valor: 3120, venc: "10/11/2026", status: "Paga" },
+      { nota: "NF 5103", forma: "Boleto", cliente: "Indústria de demonstração", servico: "SIM-SERV-F", valor: 760, venc: "18/12/2026", status: "A vencer" },
+    ],
+    finNote: "Proposta: faturas e cobranças continuam no Omni. Aqui só se lê, para o atendimento responder sobre pagamento sem abrir outro sistema. Valores de exemplo.",
+    ajustes: [
+      { t: "Papéis e pessoas", items: [["Atendimento", "Recebe, registra e aprova envios", "build"], ["Comercial", "Preço, prazo, condições e divergências", "build"], ["Gestão", "Tabelas e aprovações", "build"], ["PCP e Operação", "Ordem, apontamentos e entrega", "prop"]] },
+      { t: "Integrações", items: [["WhatsApp pela Cosmika", "Mensagens, anexos e templates", "real"], ["E-mail", "Pedidos e desenhos que chegam por e-mail", "prop"], ["Omni (a confirmar)", "Cadastro, pedido e faturas", "prop"], ["Carga Máquina", "Ordem e apontamentos", "prop"]] },
+      { t: "Tabelas", items: [["Compostos e durezas", "Vigente desde 01/11/2026", "build"], ["Tempos por faixa", "Versão 2026", "build"], ["Rotas de entrega", "Por região e dia", "real"]] },
+      { t: "Templates do WhatsApp", items: [["Proposta", "Com o PDF da revisão", "build"], ["Peças recebidas", "Depois da inspeção", "build"], ["Peças prontas", "Com o guia de uso", "build"]] },
+      { t: "Agente", items: [["Faz sozinho", "Responde dúvidas, registra necessidades, sugere specs", "real"], ["Pede aprovação", "Todo envio ao cliente, preço, prazo e aceite", "real"], ["Nunca faz", "Inventar preço ou prazo, ligar peça sem conferência", "real"]] },
+    ],
+  };
+
+  const SCENARIOS = [
+    { id: "desenho", href: "percurso-sanborr.html", av: "ID", who: "Indústria de demonstração", label: "Com desenho · cliente da carteira", last: "Pode ser 17/12." },
+    { id: "foto", href: "percurso-sanborr-foto.html", av: "EE", who: "Embalagens de exemplo", label: "Sem desenho · só a foto da peça", last: "É isso. O comprimento é 1.250." },
+    { id: "ref", href: "percurso-sanborr-ref.html", av: "PC", who: "Papel e cartão de exemplo", label: "Por referência · peça de máquina", last: "Medimos 124,6 mm." },
+  ];
+
+  const SHARED = [[3, "Inspeção"], [4, "Orçamento"], [5, "Envio"], [6, "Revisão 1"], [7, "Pedido"], [8, "Ordem"], [9, "Programação"], [10, "Apontamentos"], [11, "Custo"], [12, "Entrega"], [13, "Nossa proposta"]];
+  const more = (from) => ({ href: "percurso-sanborr.html", label: "Daqui segue igual à conversa 1 · D3 e D2", steps: SHARED.filter(([n]) => n >= from) });
+  window.SanborrCommon = { KB, FILES, PLATFORM, SCENARIOS, paper, more };
+})();

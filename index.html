@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<title>Percurso Sanborr</title>
+<link rel="icon" href="data:,">
+<link href="https://fonts.googleapis.com/css2?family=Piazzolla:opsz,wght@8..30,500&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./kit.css">
+<style>
+  body { background: var(--background); color: var(--foreground); font-family: var(--font-sans); margin: 0; }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px; display: grid; gap: 20px; }
+  h1 { font-family: var(--font-display); font-weight: 500; font-size: 2rem; line-height: 1.15; }
+  p { color: var(--muted-foreground); }
+  .cards { display: grid; gap: 10px; }
+  .card { display: grid; gap: 2px; padding: 16px 18px; border-radius: 14px; background: var(--card); box-shadow: var(--shadow-card); color: inherit; text-decoration: none; min-height: 44px; }
+  .card:hover { box-shadow: inset 0 0 0 2px var(--primary), var(--shadow-card); }
+  .card strong { font-size: 1.0625rem; }
+  .card span { color: var(--muted-foreground); font-size: 0.9375rem; }
+  .card:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  small { color: var(--muted-foreground); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Percurso Sanborr: do WhatsApp à entrega, com o Resto</h1>
+  <p>Protótipo navegável com dados de exemplo. Três conversas, cada uma num cenário. Em todas, os anexos abrem, a base de conhecimento abre por inteiro e o botão "Hoje × com o Resto" compara cada etapa com o processo atual.</p>
+  <div class="cards">
+    <a class="card" href="./percurso-sanborr.html?captura=1#etapa-1"><strong>1. Cliente com desenho</strong><span>Do contato à entrega: inspeção, orçamento, revisões, pedido, ordem, PCP, apontamentos, custo e a nossa proposta.</span></a>
+    <a class="card" href="./percurso-sanborr-foto.html?captura=1#etapa-1"><strong>2. Cliente sem desenho</strong><span>Das fotos com trena e paquímetro a um desenho sugerido com 3D, que o cliente confere.</span></a>
+    <a class="card" href="./percurso-sanborr-ref.html?captura=1#etapa-1"><strong>3. Peça por referência</strong><span>Só o modelo da máquina e a posição: histórico, busca em fontes públicas e a ficha com a origem de cada medida.</span></a>
+  </div>
+  <small>Clientes, códigos, valores e documentos são fictícios. Feito pela Resto, novembro de 2026.</small>
+</main>
+</body>
+</html>
