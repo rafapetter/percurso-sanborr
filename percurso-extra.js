@@ -5,7 +5,7 @@
   const stBadge = (k) => Journey.h.stBadge(k);
   const KIND = { privado: "Da empresa, privado", publico: "Pública", dados: "Dados de sistema da empresa" };
   let PRIV = null;
-  fetch("privado/manifest.json", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).then((j) => { PRIV = j; }).catch(() => {});
+  // Versão pública: sem material real.
   const realGroup = (id) => PRIV?.groups.find((g) => g.id === id);
   const realHTML = (id) => { const g = realGroup(id); if (!g) return ""; return `<section class="real"><div class="real-h"><h3>Material real da Sanborr</h3><span class="badge b-pend">Só nesta máquina</span></div><p class="meta">${esc(g.t)}</p><div class="real-grid">${g.items.map((it, i) => `<button class="real-th" data-real="${id}" data-i="${i}" aria-label="Abrir: ${esc(it.t)}"><img src="${esc(it.src)}" alt="" loading="lazy"><span>${esc(it.t)}</span></button>`).join("")}</div></section>`; };
   function openReal(id, i) {
