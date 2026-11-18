@@ -12,7 +12,7 @@
     else delete document.documentElement.dataset.theme;
   }
   const forced = q.get("tema");
-  const theme = forced === "claro" ? "light" : forced === "escuro" ? "dark" : store.get("lab-theme", "auto");
+  const theme = forced === "claro" ? "light" : forced === "escuro" ? "dark" : store.get("lab-theme", "light");
   applyTheme(theme);
 
   const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
