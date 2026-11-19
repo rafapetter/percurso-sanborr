@@ -234,25 +234,29 @@
       never: "Nenhuma mudança vai para produção sem aprovação da empresa. Os dados não saem do servidor dela.",
       real: "Plataforma, catálogo, servidor por organização e agentes: funcionam hoje. Os três apps: em construção, em código aberto.",
       screen: () => appwin("resto", `<div class="screen-title"><div class="idline"><span class="badge b-info">Proposta</span><span>Para a Sanborr e qualquer indústria da FIESP</span></div><h2>O app é aberto e gratuito. O que se paga é a plataforma.</h2></div>
-        <div class="cols three">
+        <div class="cols quad">
           <div class="box fit"><div class="box-head"><h3>1. Apps de código aberto</h3><span class="meta">Sem licença</span></div><div class="box-body"><ul class="plain">
             <li><strong>Atendimento e prospecção</strong>: conversas, clientes, pedidos</li>
             <li><strong>Propostas técnicas</strong>: inspeção, desenho, orçamento e revisões</li>
             <li><strong>Operação e custos</strong>: ordem, apontamentos e custo</li></ul>
             <p class="meta">Qualquer indústria da FIESP pode usar e adaptar, sem pagar pelo software.</p></div></div>
-          <div class="box fit"><div class="box-head"><h3>2. A Resto hospeda e evolui</h3></div><div class="box-body"><ul class="plain">
-            <li>Servidor só da empresa, com backups diários</li>
-            <li>O agente da Resto faz campos, fluxos e integrações (Omni, Carga Máquina) quando a empresa pedir</li>
-            <li>Cada mudança passa por testes e pela aprovação da empresa antes de entrar</li></ul>
+          <div class="box fit"><div class="box-head"><h3>2. Onde roda e quem controla</h3></div><div class="box-body"><ul class="plain">
+            <li>Na nuvem que a empresa escolher, ou hospedado pela Resto</li>
+            <li>Servidor e banco só da empresa, com opção de VPN e backups diários</li>
+            <li>O agente da Resto faz campos, fluxos e integrações quando a empresa pedir; cada mudança passa por testes e aprovação</li></ul>
             <p class="meta">Código e dados são da empresa. Se sair, leva os dois.</p></div></div>
           <div class="box fit price"><div class="box-head"><h3>3. O preço é o da plataforma</h3></div><div class="box-body">
             <p class="v">Plano Scale · R$ 950/mês</p>
-            <ul class="plain"><li>Servidor só da empresa: 4 vCPU, 8 GB de memória, 80 GB de disco</li><li>Até 10 apps do catálogo, incluindo a Cosmika</li><li>120 horas de agentes por mês para as mudanças</li><li>15 pessoas, backups guardados por 30 dias</li></ul>
-            <p class="meta">Preço no Pix, da página de planos do Resto em 18/11/2026. Mais servidores ou mais horas: sob consulta, a partir de R$ 2.990/mês.</p></div></div>
+            <ul class="plain"><li>Servidor só da empresa: 4 vCPU, 8 GB de memória, 80 GB de disco</li><li>Até 10 apps do catálogo, incluindo a Cosmika</li><li>120 horas de agentes por mês para as mudanças, 15 pessoas</li></ul>
+            <p class="meta">Preço no Pix, da página de planos do Resto em 18/11/2026. Acima disso: sob consulta, a partir de R$ 2.990/mês.</p></div></div>
+          <div class="box fit"><div class="box-head"><h3>4. Prazo e custos de terceiros</h3><span class="meta">Estimativas da call de 18/11</span></div><div class="box-body">
+            <p><strong>Três semanas</strong> para a primeira versão, contadas a partir de recebermos o catálogo de preços, a planilha de precificação, as regras de atendimento e a base de conhecimento.</p>
+            <ul class="plain"><li>WhatsApp (Meta): de R$ 100 a R$ 200 por mês</li><li>IA: de R$ 70 a R$ 100 por mês; um pedido com análise de foto, de R$ 0,50 a R$ 0,70</li></ul>
+            <p class="meta">Estimativas sem medição de uso. O piloto mede os valores reais antes de qualquer compromisso.</p></div></div>
         </div>
         <p class="note">${ic.info}<span>O Omni e o Carga Máquina continuam sendo os sistemas da empresa. Os apps se ligam a eles; não os substituem.</span></p>`),
     },
   ];
 
-  Journey.start({ FILES: SanborrCommon.FILES, PLATFORM: SanborrCommon.PLATFORM, scenarios: SanborrCommon.SCENARIOS, scenario: "desenho", menu: true, compare: true, contact: "Indústria de demonstração", contactInitials: "ID", contactSub: "Com desenho · WhatsApp na Cosmika", compareSummary: "Hoje os mesmos dados passam por quatro lugares: a ficha de inspeção, a planilha de orçamento, o Omni e o Carga Máquina, cada um digitado à mão. Com o Resto, são registrados uma vez, na inspeção, e seguem para os outros.", key: "pcs2", org: ORG, title: "Percurso Sanborr", sub: "Conversa 1 de 3 · cliente com desenho · D3 e D2", pageTitle: "Percurso Sanborr: do WhatsApp à entrega", KB, CHAT, LINKS, STEPS });
+  Journey.start({ FILES: SanborrCommon.FILES, PLATFORM: SanborrCommon.PLATFORM, FAQ: SanborrCommon.FAQ, scenarios: SanborrCommon.SCENARIOS, scenario: "desenho", menu: true, compare: true, contact: "Indústria de demonstração", contactInitials: "ID", contactSub: "Com desenho · WhatsApp na Cosmika", compareSummary: "Hoje os mesmos dados passam por quatro lugares: a ficha de inspeção, a planilha de orçamento, o Omni e o Carga Máquina, cada um digitado à mão. Com o Resto, são registrados uma vez, na inspeção, e seguem para os outros.", key: "pcs2", org: ORG, title: "Percurso Sanborr", sub: "Conversa 1 de 3 · cliente com desenho · D3 e D2", pageTitle: "Percurso Sanborr: do WhatsApp à entrega", KB, CHAT, LINKS, STEPS });
 })();

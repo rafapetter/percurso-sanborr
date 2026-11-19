@@ -63,6 +63,8 @@
     contatos: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c.6-3.4 3-5.5 6-5.5s5.4 2.1 6 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.6.8 2.7 2.6 3 5.2"/></svg>',
     servicos: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
     financeiro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h3"/></svg>',
+    personalizar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>',
+    perguntas: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"/></svg>',
     ajustes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>',
   };
   function openMenu() {
@@ -98,11 +100,68 @@
         <div style="overflow:auto"><table class="tbl"><thead><tr><th>Nota</th><th>Cliente</th><th class="hide-sm">Serviço</th><th class="num">Valor</th><th>Vencimento</th><th>Situação</th></tr></thead><tbody>
         ${rows.map((f) => `<tr><td><code>${esc(f.nota)}</code><span class="sub">${esc(f.forma)}</span></td><td>${esc(f.cliente)}</td><td class="hide-sm">${esc(f.servico)}</td><td class="num">${fmtMoney(f.valor)}</td><td>${esc(f.venc)}</td><td>${badge(f.status, f.status === "Paga" ? "b-ok" : f.status === "Vencida" ? "b-bad" : "b-pend")}</td></tr>`).join("")}</tbody></table></div>
         <p class="note">${ic.info}<span>${esc(P.finNote)}</span></p>`;
+    } else if (id === "perguntas") {
+      body = `<div class="faq">${(Journey.cfg().FAQ || []).map(([q, a, href]) => `<details class="faq-i"><summary>${esc(q)}</summary><p>${esc(a)}</p>${href ? `<a class="btn btn-outline btn-sm" href="${href}" data-close>Ver no percurso${ic.chev}</a>` : ""}</details>`).join("")}</div>
+        <p class="note">${ic.info}<span>Perguntas feitas por Luiz e Wallace na call de 18/11. As respostas descrevem o desenho da solução; o que já funciona e o que é proposta aparece em cada etapa.</span></p>`;
+    } else if (id === "personalizar") {
+      body = persHTML();
     } else if (id === "ajustes") {
       body = `<div class="setgrid">${P.ajustes.map((a) => `<section class="setcard"><h3>${esc(a.t)}</h3>${a.items.map(([l, v, st]) => `<div class="r" style="padding:4px 0;border:0;display:flex;justify-content:space-between;gap:8px;align-items:center"><span>${esc(l)}<span class="sub" style="display:block;font-size:.75rem;color:var(--muted-foreground)">${esc(v)}</span></span>${st ? stBadge(st) : ""}</div>`).join("")}</section>`).join("")}</div>`;
     }
     return { title: m.t, sub: `${P.name} · ${m.src}`, body };
   }
+  // ---------- personalizar ----------
+  const pers = { tab: "agente", text: 0, added: false, flow: { aprov: true, insp: true, aviso: false }, req: 0, approved: false };
+  const TEXTS = [
+    ["Resposta: não sei medir", "Sem problema. Este vídeo curto mostra como medir o comprimento da borracha e o diâmetro de fora. Uma foto com a trena encostada já ajuda."],
+    ["Boas-vindas do agente", "Olá! Aqui é o atendimento da Sanborr. Me conta qual peça precisa revestir ou recuperar; se tiver foto ou desenho, pode mandar."],
+    ["Template: proposta", "Olá, {{1}}! Segue a proposta {{2}}. Fico à disposição para qualquer ajuste."],
+    ["Aviso de entrega", "As peças estão prontas e saem na rota de {{dia}}. Segue o guia de uso e armazenamento."],
+  ];
+  const FIELDS = [["Nota de remessa", "Sim", "Administrativo"], ["Código individual", "Sim", "Automático"], ["Dimensões medidas", "Sim", "Inspeção"], ["Dureza da borracha antiga", "Sim", "Inspeção"], ["Avarias e fotos", "Sim", "Inspeção"], ["Desmontagem", "Não", "Inspeção"], ["Tempo de inspeção", "Sim", "Inspeção"]];
+  const STEPS_REQ = ["Entendi o pedido: campo novo na ficha e no cálculo do volume", "Alterei a ficha de inspeção e a conta do material", "Os testes automáticos passaram", "Versão de teste pronta para vocês conferirem"];
+  function persHTML() {
+    const tabs = [["agente", "Pedir ao agente"], ["textos", "Textos"], ["campos", "Campos"], ["conhecimento", "Conhecimento"], ["fluxo", "Fluxo"]];
+    const seg = `<div class="seg" role="group" aria-label="Personalizar">${tabs.map(([k, l]) => `<button data-pers-tab="${k}" aria-pressed="${pers.tab === k}">${l}</button>`).join("")}</div>`;
+    let b = "";
+    if (pers.tab === "agente") {
+      b = `<div class="pers-ask"><label for="pers-q" class="k">Peça em português o que quer mudar</label><textarea id="pers-q" rows="2">Incluir o campo diâmetro interno na ficha de inspeção e usar no cálculo do volume da borracha.</textarea><div><button class="btn btn-primary" data-pers-act="ask" ${pers.req ? "disabled" : ""}>Pedir ao agente da Resto</button></div></div>
+        ${pers.req ? `<div class="pers-chg"><h3>Mudança proposta pelo agente</h3><ol class="pers-steps">${STEPS_REQ.map((t, i) => `<li class="${i < pers.req ? "done" : ""}">${i < pers.req ? ic.check : '<span class="dot"></span>'}<span>${esc(t)}</span></li>`).join("")}</ol>
+          ${pers.req >= STEPS_REQ.length ? (pers.approved ? `<p class="pers-ok">${ic.check}Publicado no servidor da empresa. Dá para voltar à versão anterior a qualquer momento.</p>` : `<div class="mod-top"><button class="btn btn-primary" data-pers-act="approve">Aprovar e publicar</button><span class="meta">Quem aprova: Gestão</span></div>`) : ""}</div>` : ""}
+        <p class="note">${ic.info}<span>Simulação. O agente trabalha numa cópia, roda os testes e só publica depois da aprovação de alguém da empresa. Cada mudança fica no histórico.</span></p>`;
+    } else if (pers.tab === "textos") {
+      const [t, v] = TEXTS[pers.text];
+      b = `<div class="pers-2"><ul class="navlist">${TEXTS.map(([l], i) => `<li><button data-pers-text="${i}" ${i === pers.text ? 'aria-current="page"' : ""}><span>${esc(l)}</span></button></li>`).join("")}</ul>
+        <div class="pers-edit"><label for="pers-t" class="k">${esc(t)}</label><textarea id="pers-t" rows="4">${esc(v)}</textarea><p class="k">Como o cliente vê</p><div class="msg out bot" style="max-width:100%">${esc(v)}</div><div><button class="btn btn-outline" data-pers-act="save">Salvar e pedir aprovação</button></div></div></div>`;
+    } else if (pers.tab === "campos") {
+      const rows = [...FIELDS, ...(pers.added ? [["Diâmetro interno", "Sim", "Inspeção", true]] : [])];
+      b = `<p class="meta">Ficha de inspeção. A ordem, os nomes e quem preenche são da empresa.</p><div style="overflow:auto"><table class="tbl"><thead><tr><th>Campo</th><th>Obrigatório</th><th>Quem preenche</th><th></th></tr></thead><tbody>${rows.map(([f, o, w, n]) => `<tr><td>${esc(f)}</td><td>${o}</td><td>${esc(w)}</td><td>${n ? '<span class="badge b-pend">Novo, a aprovar</span>' : ""}</td></tr>`).join("")}</tbody></table></div>
+        <div><button class="btn btn-outline" data-pers-act="field" ${pers.added ? "disabled" : ""}>Adicionar o campo "Diâmetro interno"</button></div>`;
+    } else if (pers.tab === "conhecimento") {
+      const kb = Journey.state().kb, n = (k) => Object.values(kb).filter((x) => (x.kind || "privado") === k).length;
+      b = `<div class="kpis"><div class="kpi"><span class="l">Da empresa</span><span class="v">${n("privado")}</span></div><div class="kpi"><span class="l">Públicas</span><span class="v">${n("publico")}</span></div><div class="kpi"><span class="l">Dados de sistemas</span><span class="v">${n("dados")}</span></div></div>
+        <div class="setgrid"><section class="setcard"><h3>Escrever um artigo</h3><p class="meta">Texto, perguntas que ele responde e quem aprova.</p></section><section class="setcard"><h3>Enviar um arquivo</h3><p class="meta">Catálogo, tabela ou manual em PDF ou planilha. O agente lê e propõe os artigos.</p></section><section class="setcard"><h3>Corrigir uma resposta</h3><p class="meta">Na conversa, marcar a resposta e escrever o certo. Vira mudança na base, com aprovação.</p></section></div>
+        <p class="meta">As fontes atuais estão na aba Conhecimento, ao lado da conversa.</p>`;
+    } else {
+      const tg = (k, l, d, lock) => `<label class="pers-tg"><input type="checkbox" data-pers-flow="${k}" ${pers.flow[k] ? "checked" : ""} ${lock ? "disabled" : ""}><span><strong>${esc(l)}</strong><span class="meta">${esc(d)}</span></span></label>`;
+      b = `<div class="pers-flow">${tg("aprov", "Envio ao cliente pede aprovação", "Sempre ligado: nenhuma proposta sai sem uma pessoa aprovar", true)}${tg("insp", "Inspeção antes do orçamento", "O orçamento só usa medidas da inspeção ou conferidas pelo cliente")}${tg("aviso", "Aviso de entrega automático", "Quando ligado, o aviso sai sozinho depois da inspeção final aprovada")}</div>
+        <p class="meta">Mudanças no fluxo também entram pelo agente, com aprovação.</p>`;
+    }
+    return `${seg}${b}`;
+  }
+  function refreshPers() { const d = document.querySelector("dialog#dlg .dlg-body"); if (d) d.innerHTML = persHTML(); }
+  document.addEventListener("click", async (e) => {
+    const t = e.target.closest("[data-pers-tab],[data-pers-act],[data-pers-text]"); if (!t) return;
+    if (t.dataset.persTab) { pers.tab = t.dataset.persTab; refreshPers(); document.querySelector(`[data-pers-tab="${pers.tab}"]`)?.focus(); return; }
+    if (t.dataset.persText) { pers.text = Number(t.dataset.persText); refreshPers(); return; }
+    const a = t.dataset.persAct;
+    if (a === "save") toast("Texto enviado para aprovação do Comercial.");
+    if (a === "field") { pers.added = true; refreshPers(); toast("Campo novo enviado para aprovação."); }
+    if (a === "approve") { pers.approved = true; refreshPers(); toast("Mudança publicada."); }
+    if (a === "ask") { for (let i = 1; i <= STEPS_REQ.length; i++) { pers.req = i; refreshPers(); await new Promise((r) => setTimeout(r, reduced ? 0 : 700)); } document.querySelector('[data-pers-act="approve"]')?.focus(); }
+  });
+  document.addEventListener("change", (e) => { const t = e.target.closest("[data-pers-flow]"); if (t) { pers.flow[t.dataset.persFlow] = t.checked; toast("Mudança no fluxo enviada para aprovação."); } });
+
   function openModule(id, filter = "Todos") {
     const { title, sub, body } = moduleHTML(id, filter);
     const d = openDialog(`${dlgHead(esc(title), esc(sub))}<div class="dlg-body">${body}</div>`, { wide: true });

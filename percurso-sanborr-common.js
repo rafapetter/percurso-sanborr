@@ -15,6 +15,7 @@
     propostas: { kind: "privado", t: "Propostas e revisões", item: "Toda revisão congelada, com o PDF e o que mudou", where: "Propostas técnicas", st: "build", owner: "Comercial", updated: "Contínuo", access: "Leitura", desc: "Histórico de propostas por cliente e por peça, com preço, prazo e condições de cada revisão.", use: "Mostra o que foi cotado antes para a mesma peça. Não copia preço sozinho." },
     rota: { kind: "privado", t: "Rotas de entrega", item: "Rota fixa por região e dia; segunda e sexta para urgências", where: "Base de conhecimento da Cosmika", st: "real", owner: "Logística", updated: "18/11/2026", access: "Leitura", desc: "Que dia da semana a frota passa em cada região. Fora do estado, a transportadora é do cliente.", use: "Diz ao cliente o dia da entrega, nunca o horário.", sample: { title: "Rotas de exemplo", cols: ["Dia", "Região"], rows: [["Terça", "Região A"], ["Quarta", "Região B"], ["Quinta", "Região C"], ["Segunda e sexta", "Urgências"]] } },
     guia: { kind: "privado", t: "Guia de uso e armazenamento", item: "Vai junto com a peça na entrega", where: "Base de conhecimento da Cosmika", st: "real", owner: "Responsável técnico", updated: "01/10/2026", access: "Leitura e envio", desc: "Boas práticas de uso, armazenamento e limpeza das peças revestidas.", use: "Anexa o guia no aviso de entrega e responde dúvidas de cuidado." },
+    medir: { kind: "privado", t: "Como medir o rolo", item: "Vídeo curto da Sanborr: comprimento da borracha e diâmetro de fora", where: "Base de conhecimento da Cosmika", st: "prop", owner: "Comercial", updated: "A gravar pela Sanborr", access: "Leitura e envio", desc: "Resposta pronta para o cliente que não sabe medir. Ideia levantada pela própria equipe na call de 18/11.", use: "Manda o vídeo quando o cliente diz que não sabe medir, e pede uma foto com a trena encostada." },
     // Públicas
     shore: { kind: "publico", t: "Normas de dureza Shore", item: "Método de medição com durômetro (ISO 48-4, ASTM D2240)", where: "Normas técnicas publicadas", st: "real", access: "Referência", desc: "Como a dureza é medida e por que ela sempre vem com a escala. Serve para explicar ao cliente o que está sendo pedido.", use: "Explica a escala e a tolerância. Não decide a dureza da peça." },
     tol: { kind: "publico", t: "Tolerâncias gerais", item: "Classes de tolerância para medidas sem indicação (ISO 2768)", where: "Normas técnicas publicadas", st: "real", access: "Referência", desc: "Quando o desenho não traz tolerância numa medida, a classe geral indica a faixa aceitável.", use: "Aponta medidas sem tolerância no desenho e pergunta qual classe vale." },
@@ -46,6 +47,7 @@
     "Pedido de compra 8812.pdf": { title: "Pedido de compra do cliente", sub: "WhatsApp · 26/11 09:15", render: () => paper({ title: "Pedido de compra 8812", meta: ["Emitido por: Indústria de demonstração", "26/11/2026"], table: { cols: ["Item", "Qtd.", "Preço unit.", "Entrega"], num: [1, 2], rows: [["Revestimento de cilindro, ref. proposta PRO-0011 rev. 1", "2", "R$ 720,00", "11/12/2026"]] }, foot: ["A entrega pedida (11/12) diverge da revisão (17/12). O app mostra isso antes de fechar."] }) },
     "Guia de uso e armazenamento.pdf": { title: "Guia de uso e armazenamento", sub: "Base de conhecimento", render: () => paper({ title: "Guia de uso e armazenamento", intro: "Cuidados para a peça revestida durar mais.", table: { cols: ["Cuidado", "Como"], rows: [["Armazenar", "Na horizontal, apoiada pelo eixo, longe de sol e de motores elétricos"], ["Limpar", "Pano úmido e detergente neutro; sem solventes"], ["Montar", "Sem bater na borracha; conferir o alinhamento"], ["Inspecionar", "Trincas, desgaste irregular ou perda de dureza: avisar antes de piorar"]] }, foot: ["Texto de exemplo."] }) },
     "foto-cilindro-pronto.jpg": { title: "Cilindro pronto", sub: "Foto da inspeção final", render: () => A.photo("pronto"), note: "Imagem sintética. A etiqueta leva o código da peça e a dureza medida." },
+    "Como medir o rolo (vídeo).mp4": { title: "Como medir o rolo", sub: "Vídeo curto da Sanborr · a gravar", render: () => A.video(), note: "Quadro ilustrativo. O vídeo será gravado pela equipe da Sanborr; o agente manda o arquivo que estiver na base." },
     // conversa sem desenho
     "foto-rolo-trena.jpg": { title: "Foto com trena", sub: "WhatsApp · enviada pelo cliente", render: () => A.photo("trena"), note: "Imagem sintética. A trena dá o comprimento aproximado da borracha; a inspeção confirma." },
     "foto-ponta-eixo.jpg": { title: "Foto da ponta do eixo", sub: "WhatsApp · enviada pelo cliente", render: () => A.photo("ponta"), note: "Imagem sintética. O paquímetro mostra o diâmetro da ponta do eixo." },
@@ -63,6 +65,8 @@
       { id: "contatos", t: "Contatos e clientes", sub: "Quem fala com a empresa, com origem e situação", src: "Cosmika e cadastro do Omni", st: "build" },
       { id: "servicos", t: "Serviços e pedidos", sub: "Cada serviço da conversa à entrega", src: "Propostas técnicas e Operação e custos", st: "build" },
       { id: "financeiro", t: "Financeiro", sub: "Faturas e cobranças, lidas do ERP", src: "Leitura do Omni (proposta)", st: "prop" },
+      { id: "personalizar", t: "Personalizar", sub: "Textos, campos, conhecimento e fluxo, pela empresa ou pedindo ao agente", src: "Feito pela empresa ou pelo agente da Resto, com aprovação", st: "prop" },
+      { id: "perguntas", t: "Perguntas da Sanborr", sub: "O que a equipe perguntou na call de 18/11, respondido", src: "Call de 18/11/2026", st: "build" },
       { id: "ajustes", t: "Ajustes", sub: "Papéis, integrações, tabelas, templates e agente", src: "Configuração da organização", st: "build" },
     ],
     contatos: [
@@ -95,10 +99,25 @@
       { t: "Integrações", items: [["WhatsApp pela Cosmika", "Mensagens, anexos e templates", "real"], ["E-mail", "Pedidos e desenhos que chegam por e-mail", "prop"], ["Omni (a confirmar)", "Cadastro, pedido e faturas", "prop"], ["Carga Máquina", "Ordem e apontamentos", "prop"]] },
       { t: "Tabelas", items: [["Compostos e durezas", "Vigente desde 01/11/2026", "build"], ["Tempos por faixa", "Versão 2026", "build"], ["Rotas de entrega", "Por região e dia", "real"]] },
       { t: "Templates do WhatsApp", items: [["Proposta", "Com o PDF da revisão", "build"], ["Peças recebidas", "Depois da inspeção", "build"], ["Peças prontas", "Com o guia de uso", "build"]] },
+      { t: "Números de WhatsApp", items: [["Atendimento automático", "Número novo, só para o agente e a equipe responderem", "prop"], ["Número atual do Comercial", "Segue para ligações; mensagens que chegarem ali podem ser encaminhadas", "prop"], ["A verificar", "Tarifas e continuidade das ligações na conta da Meta", ""]] },
+      { t: "Alertas", items: [["Pedido de orçamento novo", "Comercial · sistema e WhatsApp", "build"], ["Aprovação de envio parada", "Gestão · sistema e e-mail", "build"], ["Divergência no pedido", "Comercial · sistema e WhatsApp", "build"], ["Ordem liberada e evento separado", "PCP · sistema", "prop"]] },
+      { t: "Correções", items: [["Corrigir uma resposta do agente", "Na conversa, marcar a resposta e escrever o certo", "prop"], ["Vira mudança na base", "Alguém do Comercial aprova; o agente passa a usar", "prop"], ["Histórico", "Toda correção fica registrada, com quem aprovou", "prop"]] },
       { t: "Agente", items: [["Faz sozinho", "Responde dúvidas, registra necessidades, sugere specs", "real"], ["Pede aprovação", "Todo envio ao cliente, preço, prazo e aceite", "real"], ["Nunca faz", "Inventar preço ou prazo, ligar peça sem conferência", "real"]] },
     ],
   };
 
+  const FAQ = [
+    ["Quando a triagem anda sozinha?", "Desde o primeiro dia o agente responde o que está na base e registra as necessidades. Preço, prazo, aceite e todo envio de proposta passam por uma pessoa. A empresa decide, com o tempo, o que mais libera.", "percurso-sanborr.html#etapa-2"],
+    ["A equipe conduz as conversas pelo sistema?", "Sim. A conversa fica na Cosmika; qualquer pessoa da equipe assume, e o agente para de responder enquanto ela conduz.", "percurso-sanborr.html#etapa-1"],
+    ["Quem recebe os alertas?", "Cada alerta vai para um papel, pelo canal escolhido: sistema, WhatsApp ou e-mail. Exemplo: pedido de orçamento novo vai ao Comercial; aprovação parada, à Gestão.", null],
+    ["Quando o orçamentista entra?", "Na etapa de orçamento. O app faz a conta pelas tabelas; o orçamentista confere, decide preço, prazo e validade, e aprova a revisão.", "percurso-sanborr.html#etapa-4"],
+    ["De onde vêm os valores do cálculo?", "Das tabelas que a Gestão cadastra, com vigência: compostos (R$/kg e densidade) e tempos por faixa. Cada número mostra a tabela e a versão de onde veio.", "percurso-sanborr.html#etapa-4"],
+    ["Como corrigir uma resposta depois?", "Na conversa, marca a resposta e escreve o certo. A correção vira uma mudança na base, alguém aprova, e o agente passa a usar.", null],
+    ["Quem controla os dados?", "A empresa. Servidor e banco só dela, na nuvem que escolher, com opção de VPN. O código é aberto: se sair, leva código e dados.", "percurso-sanborr.html#etapa-13"],
+    ["E o CRM?", "Contatos e clientes já fazem parte do Atendimento, ligados ao cadastro do ERP. Concentrar o CRM inteiro aqui fica para avaliar depois.", null],
+    ["E quando o cliente não sabe medir?", "O agente manda o vídeo curto da Sanborr e pede uma foto com a trena encostada. Sem desenho, o app monta um desenho sugerido para o cliente conferir.", "percurso-sanborr-foto.html#etapa-1"],
+    ["Um número novo de WhatsApp?", "Recomendamos um número só para o atendimento automático; o atual segue para ligações. Tarifas e continuidade das ligações precisam ser verificadas na conta da Meta.", null],
+  ];
   const SCENARIOS = [
     { id: "desenho", href: "percurso-sanborr.html", av: "ID", who: "Indústria de demonstração", label: "Com desenho · cliente da carteira", last: "Pode ser 17/12." },
     { id: "foto", href: "percurso-sanborr-foto.html", av: "EE", who: "Embalagens de exemplo", label: "Sem desenho · só a foto da peça", last: "É isso. O comprimento é 1.250." },
@@ -107,5 +126,5 @@
 
   const SHARED = [[3, "Inspeção"], [4, "Orçamento"], [5, "Envio"], [6, "Revisão 1"], [7, "Pedido"], [8, "Ordem"], [9, "Programação"], [10, "Apontamentos"], [11, "Custo"], [12, "Entrega"], [13, "Nossa proposta"]];
   const more = (from) => ({ href: "percurso-sanborr.html", label: "Daqui segue igual à conversa 1 · D3 e D2", steps: SHARED.filter(([n]) => n >= from) });
-  window.SanborrCommon = { KB, FILES, PLATFORM, SCENARIOS, paper, more };
+  window.SanborrCommon = { KB, FILES, PLATFORM, SCENARIOS, FAQ, paper, more };
 })();

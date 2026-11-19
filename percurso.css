@@ -414,3 +414,38 @@ dialog.drawer[open], dialog.page[open] { display: flex; }
 .steps a.ext { opacity: 0.78; }
 .steps a.ext .n { background: transparent; box-shadow: inset 0 0 0 1.5px var(--border-strong); }
 .steps a.ext:hover { opacity: 1; }
+
+/* proposta 2 × 2, perguntas e personalização */
+.cols.quad { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: auto; }
+@media (max-width: 1199px) { .cols.quad { grid-template-columns: minmax(0, 1fr); } }
+.cols.quad .box-body p { font-size: 0.875rem; }
+.faq { display: grid; gap: 8px; }
+.faq-i { border-radius: 12px; background: var(--secondary); padding: 0 14px; }
+.faq-i summary { min-height: 48px; display: flex; align-items: center; font-weight: 600; cursor: pointer; list-style: none; }
+.faq-i summary::-webkit-details-marker { display: none; }
+.faq-i summary::after { content: "+"; margin-left: auto; color: var(--muted-foreground); font-size: 1.125rem; }
+.faq-i[open] summary::after { content: "−"; }
+.faq-i p { font-size: 0.9375rem; margin-bottom: 10px; }
+.faq-i .btn { margin-bottom: 12px; }
+.pers-ask { display: grid; gap: 8px; }
+.pers-ask textarea, .pers-edit textarea { width: 100%; border-radius: 10px; border: 1px solid var(--input); background: var(--card); color: var(--foreground); font: inherit; padding: 10px 12px; resize: vertical; }
+.pers-ask .k, .pers-edit .k { font-size: 0.75rem; font-weight: 600; color: var(--muted-foreground); }
+.pers-chg { border-radius: 12px; border: 1px solid var(--border-strong); padding: 14px; display: grid; gap: 10px; }
+.pers-chg h3 { font-size: 0.9375rem; }
+.pers-steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; font-size: 0.875rem; }
+.pers-steps li { display: flex; gap: 8px; align-items: center; color: var(--muted-foreground); }
+.pers-steps li.done { color: var(--foreground); }
+.pers-steps li svg { width: 16px; height: 16px; color: var(--success); flex: none; }
+.pers-steps .dot { width: 10px; height: 10px; border-radius: 999px; border: 2px solid var(--border-strong); margin: 0 3px; flex: none; }
+.pers-ok { display: flex; gap: 8px; align-items: center; color: var(--success); font-weight: 600; font-size: 0.875rem; }
+.pers-ok svg { width: 18px; height: 18px; }
+.pers-2 { display: grid; grid-template-columns: minmax(180px, 240px) minmax(0, 1fr); gap: 14px; }
+@media (max-width: 767px) { .pers-2 { grid-template-columns: minmax(0, 1fr); } }
+.pers-edit { display: grid; gap: 8px; align-content: start; }
+.pers-flow { display: grid; gap: 8px; }
+.pers-tg { display: flex; gap: 12px; align-items: flex-start; border-radius: 12px; background: var(--secondary); padding: 12px 14px; cursor: pointer; min-height: 44px; }
+.pers-tg input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--primary); flex: none; }
+.pers-tg span { display: grid; gap: 2px; }
+.pers-tg .meta { font-size: 0.8125rem; }
+.seg { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.seg button { white-space: nowrap; flex: none; }

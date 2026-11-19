@@ -100,7 +100,7 @@
             <p><a class="btn btn-outline" href="percurso-sanborr.html#etapa-3">Ver a inspeção na conversa com desenho${ic.chev}</a></p></div></div></div>`),
     },
   ];
-  Journey.start({ FILES: SanborrCommon.FILES, PLATFORM: SanborrCommon.PLATFORM, scenarios: SanborrCommon.SCENARIOS, more: SanborrCommon.more(3), scenario: "ref", menu: true, compare: true,
+  Journey.start({ FILES: SanborrCommon.FILES, PLATFORM: SanborrCommon.PLATFORM, FAQ: SanborrCommon.FAQ, scenarios: SanborrCommon.SCENARIOS, more: SanborrCommon.more(3), scenario: "ref", menu: true, compare: true,
     compareSummary: "Por referência, hoje alguém procura manual e distribuidor à mão, e a origem de cada medida se perde. Com o Resto, o agente busca, cita a fonte e transforma divergência em pergunta. Processo atual a confirmar com a empresa.",
     key: "pcs-ref", org: ORG, contact: "Papel e cartão de exemplo", contactInitials: "PC", contactSub: "Por referência · WhatsApp na Cosmika", title: "Percurso Sanborr", sub: "Conversa 3 de 3 · peça por referência", pageTitle: "Percurso Sanborr: peça por referência", KB, CHAT, LINKS, STEPS });
 })();

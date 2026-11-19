@@ -120,5 +120,17 @@
     return frame(`${defs(id)}${shop(id)}${cyl(id, { x1: 170, x2: 600, cy: 300, r: 78 })}`, "Foto sintética");
   }
 
-  window.Assets = { roll, photo, esc, nf };
+  // Quadro ilustrativo do vídeo de medição, com botão de play e duração.
+  function video() {
+    const id = ++uid;
+    const inner = photo("trena").replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
+    return `<svg viewBox="0 0 800 600" role="img" aria-label="Quadro ilustrativo do vídeo: como medir o rolo com trena" xmlns="http://www.w3.org/2000/svg">${inner}
+      <rect width="800" height="600" fill="#000" opacity="0.28"/>
+      <circle cx="400" cy="270" r="54" fill="#fff" opacity="0.92"/><path d="M386 244 L424 270 L386 296 Z" fill="#1f6b4c"/>
+      <rect x="0" y="544" width="800" height="56" fill="#000" opacity="0.6"/><rect x="24" y="568" width="620" height="6" rx="3" fill="#fff" opacity="0.35"/><rect x="24" y="568" width="140" height="6" rx="3" fill="#62bd8f"/>
+      <text x="664" y="577" fill="#fff" font-size="16" font-family="Source Sans 3, sans-serif">0:02 / 0:10</text>
+      <text x="400" y="360" fill="#fff" font-size="22" font-weight="600" text-anchor="middle" font-family="Source Sans 3, sans-serif">Como medir o rolo</text>
+      <text x="400" y="388" fill="#fff" font-size="15" text-anchor="middle" font-family="Source Sans 3, sans-serif" opacity="0.9">Comprimento da borracha e diâmetro de fora</text></svg>`;
+  }
+  window.Assets = { roll, photo, video, esc, nf };
 })();
